@@ -1100,7 +1100,7 @@
 {
   "instruction": "Explain the legal implications of Clause 242.",
   "input": "What does Clause 242 mean legally in the context of dividing property?",
-  "output": "Clause 242, known as 'Separated Heir entitled to Succession,' governs situations where one heir comes into being while another heir is staying with them. The clause provides specific rights and responsibilities for each heir based on their living arrangements and contributions to the property. Here's a detailed analysis of Clause 242:\n\n(1) If a separated heir dies when they were living with an heir who has lived separately, after taking their partition share of property, if the un-separated heir does not maintain proper care (e.g., without ensuring the deceased person is supported or financially viable), the separated heir may take succession. This means they inherit their child's assets.\n\n(2) However, even if a separated heir dies while living with an heir only for a short duration (without taking the partition share of property), the heir who stayed with them does not claim succession unless specifically required by subsection (1). In such cases, they are entitled to their own rights and responsibilities as part of the living arrangement."
+  "output": "Clause 242, known as 'Separated Heir entitled to Succession,' governs situations where one heir comes into being while another heir is staying with them. The clause provides specific rights and responsibilities for each heir based on their living arrangements and contributions to the property. Here's a detailed analysis of Clause 242: (1) If a separated heir dies when they were living with an heir who has lived separately, after taking their partition share of property, if the un-separated heir does not maintain proper care (e.g., without ensuring the deceased person is supported or financially viable), the separated heir may take succession. This means they inherit their child's assets.\n\n(2) However, even if a separated heir dies while living with an heir only for a short duration (without taking the partition share of property), the heir who stayed with them does not claim succession unless specifically required by subsection (1). In such cases, they are entitled to their own rights and responsibilities as part of the living arrangement."
 }, 
 {
   "instruction": "Explain the provisions stated in Clause 243.",
@@ -2354,10 +2354,10 @@
 {
   "instruction": "Explain the legal implications of Clause 559.",
   "input": "When goods are delivered in a contract, except for basic documents related to ownership or use, the ownership of the goods is not deemed transferred.",
-  "output": "Clause 559 states that when goods are delivered in a contract, basic documents such as those related to their ownership or usage are not handed 
-over. The ownership of the goods is considered not transferred unless these documents are provided as per the contract terms. This means that even if the parties discuss the ownership of the goods after deli"Someone received some payment after contract performance and now has issues with their claims against the company. Explain how their payments are handled according to the clause.",
-  "output": "Under Clause 538, if there is partial cash or benefit received, the contract is voided. If the service/advantage is not paid properly, the receiver must pay reasonable consideration for the failure to perform. If the company fails to return the cash/kids or pay the amount due, reasonable expenses may be recovered."
-}, 
+  "output": "Clause 559 establishes that delivery of goods alone does not constitute transfer of ownership unless the basic documents related to ownership or usage of the goods are also delivered as specified in the contract. This means the recipient does not legally become the owner until such documents are provided. Therefore, mere physical delivery without accompanying legal documents does not transfer ownership rights."
+}
+, 
+
 {
   "instruction": "Analyze the legal implications of Clause 539.",
   "input": "A lawyer wanted to explain how recovery amounts are calculated in case of rescinded contracts. They provided several examples from a contract with high performance.",
@@ -2540,10 +2540,11 @@ over. The ownership of the goods is considered not transferred unless these docu
 }, 
 
 {
-  "instruction": "Explain the provisions stated in Clause 606.",
-  "input": "A carrier carried goods which resulted in a loss. How much compensation must be paid to the carrier?",
-  "output": "Clause 606 of the Muluki Ain civil law code governs the liability and compen"If the bailor (person giving the bail) bails any goods or services they do not own or have no title to, and if the bailee is compelled to bear any claim or loss or damage to a third party from such bailment, then the bailor must also be liable to pay costs related to this action. Furthermore, the bailor may have obligations to pay costs in relation to the damage. This clause only applies to third parties who are not directly involved in the original bailment."
-}, 
+  "instruction": "Explain the legal limitations on the carrier's liability for goods under Clause 606.",
+  "input": "What are the conditions and exceptions to the carrier's liability for loss or damage to goods during carriage according to Clause 606?",
+  "output": "Clause 606 limits the carrier's liability for loss or damage to goods carried. Generally, unless the owner or their agent declares a higher value at contract conclusion, compensation for any loss or damage shall not exceed one hundred thousand rupees. Furthermore, the carrier is not liable for loss or damage to certain specified items—such as precious metals, jewelry, documents, fragile goods, animals, arms, electronics, and others—unless the owner or agent explicitly declares such goods at the time of contract or delivery. To manage the risks related to these exceptions, the carrier may insure the goods through the owner or by themselves, charging a separate fee, or take other necessary risk prevention measures."
+}
+, 
 {
   "instruction": "Explain the provisions stated in Clause 581.",
   "input": "You need to return goods for repair and maintenance that are being delivered to a person. If they are delivered for your repairs, improvement, or renovation, you must repair, improve, and return them within a specified period. If not returned on time or damaged, certain consequences apply.",
