@@ -5,7 +5,7 @@
 }, 
 {
   "instruction": "Analyze the legal implications of Clause 2.",
-  "input": "What does Clause 2 mean for a minor under this dataset?",
+  "input": "What does Clause 2 mean for a minor?",
   "output": "Clause 2 defines that a 'minor' is a child who has not attained eighteen years of age. This means they may not attend school or court proceedings unless otherwise restricted by the law."
 }, 
 {
