@@ -649,15 +649,17 @@
   "output": "According to Clause 142, maintenance under guardianship involves the guardian making specific arrangements for a person who may not be able to handle things on their own. If there is no movable property, the guardian can use their immovable property but requires court permission before selling it. This ensures that the maintenance continues as if the person were in good standing."
 }, 
 {
-  "instruction": "Analyze the legal implications of Clause 143.",
-  "input": "You are helping to manage your land properly. Your property is under the guardian's supervision. Explain how you should ensure it remains protected and managed.",
-  "output": "<The guardian shall supervise and protect the property belonging to the incompetent or quasi-competent person under his or her guardianship. The guardian may carry on any business or transaction by investing the property belonging to the person under his or her guardianship. Ensure that your actions respect the property's ownership and maintain its value."
-}, 
+  "instruction": "Explain the legal duties of a guardian regarding property management under Clause 143.",
+  "input": "What responsibilities does a guardian have in managing the property of an incompetent or quasi-competent person?",
+  "output": "Clause 143 places a legal obligation on the guardian to supervise, protect, and manage the property of an incompetent or quasi-competent person. The guardian is responsible for ensuring that the property is not misused, neglected, or lost. Additionally, the guardian has the authority to carry out business or financial transactions using the person's property, but this must be done in the best interest of the person under guardianship and with proper care and responsibility."
+}
+, 
 {
-  "instruction": "<From templates using 144, sometimes use a flexible one>",
-  "input": "<Related natural user question or scenario>",
-  "output": "<Plain English, legally accurate response citing clause 144, addressing ambiguities by referring to the Muluki Ain>"
-}, 
+  "instruction": "Summarize the responsibilities of a guardian regarding financial records under Clause 144.",
+  "input": "What are the duties of a guardian in maintaining and submitting financial records and property inventories for an incompetent or quasi-competent person?",
+  "output": "Clause 144 outlines the legal obligations of a guardian to maintain accurate records of all income, expenditures, and property related to an incompetent or quasi-competent person under their care. This includes expenses for maintenance, health, education, and property management. The guardian must also prepare an inventory of the person’s property. These records must be submitted to the person within one year of them attaining legal majority or being declared competent. If the person dies while under guardianship, the guardian must submit the records to the nearest successor within six months. However, if the guardian is a close family member as specified in Section 136(1), maintaining such books may not be mandatory."
+}
+, 
 {
   "instruction": "Analyze the legal implications of Clause 146.",
   "input": "The law of civil procedure has long seen the duty of guardians to act in the best interest of their client, especially when they are incompetent or quasi-competent.",
@@ -2692,7 +2694,7 @@
 }, 
 {
   "instruction": "Explain the provisions stated in Clause 612.",
-  "input": "<A user is renting out leased goods in good faith: (1) The lessee shall have the right to possess and use the leased goods in good faith and in a prudential manner as if the goods were owned by himself or herself. (2) While possesses and using the leased goods according to sub-section (1), the lessee shall possesses and use them in consonance with the object of the contract of lease. (3) If the lessee is proved to have possessed and used the leased goods contrary to subsection (1) or (2), the lessor may terminate such a contract at any time.",
+  "input": "A user is renting out leased goods in good faith: (1) The lessee shall have the right to possess and use the leased goods in good faith and in a prudential manner as if the goods were owned by himself or herself. (2) While possesses and using the leased goods according to sub-section (1), the lessee shall possesses and use them in consonance with the object of the contract of lease. (3) If the lessee is proved to have possessed and used the leased goods contrary to subsection (1) or (2), the lessor may terminate such a contract at any time.",
   "output": "Clause 612 defines the responsibilities and rights of the lessee regarding leased goods. The user must possess and use the goods in good faith, following sub-sections (1) and (2). If they violate these provisions, the lessee may terminate the lease at any time if certain conditions are met."
 }, 
 {
@@ -3010,7 +3012,7 @@
 }, 
 {
   "instruction": "Explain the provisions stated in Clause 684.",
-  "input": "<You are being sued for injuries suffered under this Chapter. You have filed your complaint and you are aggrieved from defective products. How long until I can file my case?",
+  "input": "You are being sued for injuries suffered under this Chapter. You have filed your complaint and you are aggrieved from defective products. How long until I can file my case?",
   "output": "Clause 684 states that a person aggrieved from any act done or action taken under this Chapter may make a lawsuit within six months after the date on which such an act was done or action was taken. Therefore, you have six months to file your case after the assault occurred."
 }, 
 {
