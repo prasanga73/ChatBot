@@ -48,7 +48,7 @@ Clause ID: {clause_id}
 Text: {text}
 
 
-Now generate exactly one IIO entry.
+Now generate exactly four IIO entries covering each clause in details for QLORA based IIO format fine tuning.
 
 """
 
