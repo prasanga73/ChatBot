@@ -13,43 +13,64 @@ with open("clauses.json", "r", encoding="utf-8") as f:
 
 
 # Prompt template
-prompt_template = """You are a legal AI assistant helping to create a QLORA fine-tuning dataset in Instruction-Input-Output (IIO) format based on civil law clauses from the Muluki Ain. 
+prompt_template = """You are a legal AI assistant helping to create a QLoRA fine-tuning dataset in Instruction-Input-Output (IIO) format based on civil law clauses from the Muluki Ain.
 
-Below is a legal clause extracted from the Muluki Ain civil law code. Your task is to generate **single independent, high-quality JSON sample**, each with:
+Below is a legal clause extracted from the Muluki Ain. Your task is to generate **exactly four independent, high-quality JSON samples**. Each sample must:
 
-- An **Instruction** that clearly defines a general legal task or question to the LLM involving the clause (e.g., explain, analyze, interpret). The instruction **may or may not mention the clause ID explicitly**.
-- An **Input** that reflects a common user question or real-life scenario related to the clause's topic, phrased naturally and in plain English. Do **not** summarize the clause but respond exactly to the input.
-- An **Output** that provides a concise, plain English, legally accurate answer directly based on the clause, including the clause ID in the explanation. If the clause has any ambiguous or conditional parts, instruct the user to refer to the respective clause in the Muluki Ain for clarity.
+1. Have an **Instruction** that:
+   - Is a general legal reasoning task (explain, interpret, apply, analyze).
+   - Focuses on the *type of legal issue*, not memorizing the clause text.
+   - May mention the clause ID **but should not depend entirely on it**.
 
-The **Instruction** should be based on user input and **Output** should provide a comprehensive answer to user input taking Instruction into consideration. 
+2. Have an **Input** that:
+   - Looks like a natural question or scenario a real user would ask.
+   - Does NOT summarize or rewrite the clause.
+   - Does NOT artificially mention the clause ID (unless realistic).
 
-instruction_templates = [
-    "Explain the provisions stated in Clause {clause_id}.",
-    "Analyze the legal implications of Clause {clause_id}.",
-    "Describe the rights and responsibilities defined under Clause {clause_id}.",
-    "Provide a detailed explanation of Clause {clause_id} in plain language.",
-    "What does Clause {clause_id} mean legally?",
-    "Interpret Clause {clause_id} according to civil law context.",
-    "Summarize the legal essence of Clause {clause_id}.",
-]
+3. Have an **Output** that:
+   - Is a plain-English legal explanation grounded in the clause's meaning.
+   - Mentions the clause ID **as a citation**, not the core logic.
+   - Encourages checking the Muluki Ain for authoritative interpretation.
+   - Avoids excessive copying or paraphrasing of the clause text.
 
-Use the exact JSON format for each sample:
+4. All four samples must:
+   - Cover different angles (examples, exceptions, obligations, rights, procedures).
+   - Avoid overly specific localization that would hurt generalization.
+   - Be legally consistent and precise.
 
-{{
-  "instruction": "<From templates using {clause_id}, sometimes use a flexible one too>",
-  "input": "<Related natural user question or scenario>",
-  "output": "<Plain English, legally accurate response citing clause {clause_id}, addressing ambiguities by referring to the Muluki Ain>"
-}}
+---
 
+### Instruction Template Options
+You may use these templates flexibly:
 
-Here is the clause:
+- “Explain the legal principles relevant to Clause {clause_id}.”
+- “Interpret the civil law meaning of Clause {clause_id}.”
+- “Analyze how Clause {clause_id} applies in practical situations.”
+- “Describe the rights and obligations established under Clause {clause_id}.”
+- “Provide a general legal explanation based on Clause {clause_id}.”
 
+You may also use **related but flexible instructions** (e.g., “Explain the legal rule about ___ as stated in the relevant clause”).
+
+---
+
+### Output Format
+Use *exactly* the following JSON format for each entry:
+
+{
+  "instruction": "<general legal reasoning task>",
+  "input": "<natural user scenario or question>",
+  "output": "<plain English, legally accurate explanation citing Clause {clause_id} and advising to consult the Muluki Ain>"
+}
+
+---
+
+### Clause Provided
 Clause ID: {clause_id}
 Text: {text}
 
+---
 
-Now generate exactly four IIO entries covering each clause in details for QLORA based IIO format fine tuning.
-
+Now generate **exactly four** IIO JSON entries that help the model learn generalizable legal reasoning rather than clause-specific memorization.
 """
 
 # Output file
