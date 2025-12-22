@@ -4,7 +4,11 @@ import os
 import re
 # Use CUDA GPU backend
 env = os.environ.copy()
-env["OLLAMA_ORCHESTRATOR"] = "cuda" 
+# env["OLLAMA_ORCHESTRATOR"] = "cuda" 
+env["OLLAMA_NUM_GPU_LAYERS"] = "18"   # safe for 4GB
+env["OLLAMA_CTX_SIZE"] = "1024"       # REQUIRED due to long prompt
+env["OLLAMA_GPU_OVERHEAD"] = "0"
+
 
 #Load clauses
 with open("clauses.json", "r", encoding="utf-8") as f:
@@ -56,11 +60,11 @@ You may also use **related but flexible instructions** (e.g., “Explain the leg
 ### Output Format
 Use *exactly* the following JSON format for each entry:
 
-{
+{{
   "instruction": "<general legal reasoning task>",
   "input": "<natural user scenario or question>",
   "output": "<plain English, legally accurate explanation citing Clause {clause_id} and advising to consult the Muluki Ain>"
-}
+}}
 
 ---
 
@@ -73,46 +77,85 @@ Text: {text}
 Now generate **exactly four** IIO JSON entries that help the model learn generalizable legal reasoning rather than clause-specific memorization.
 """
 
+
+# prompt_template = """You are a legal AI assistant creating QLoRA fine-tuning data (Instruction-Input-Output) from the Muluki Ain.
+
+# Generate exactly **four** JSON samples for the given clause. Each sample must include:
+
+# - Instruction: general legal reasoning (explain, interpret, apply, analyze). May mention clause ID but do not rely on it entirely.
+# - Input: a realistic question or scenario. Do not summarize the clause.
+# - Output: plain-English legal explanation citing clause ID. Encourage consulting the Muluki Ain. Avoid copying the clause text.
+
+# Ensure samples cover different angles (examples, exceptions, rights, obligations) and remain legally consistent.
+
+# Use instructions like:
+# - "Explain the legal principles relevant to Clause {clause_id}."
+# - "Interpret the civil law meaning of Clause {clause_id}."
+# You may adapt phrasing as needed.
+
+# Use exactly this JSON format:
+# {{
+#   "instruction": "<legal reasoning task>",
+#   "input": "<user scenario or question>",
+#   "output": "<plain English explanation citing Clause {clause_id}>"
+# }}
+
+# Clause ID: {clause_id}
+# Text: {text}
+# """
+
 # Output file
 output_path = "iio_dataset.jsonl"
 ollama_path = r"C:\Users\Ethereal\AppData\Local\Programs\Ollama\ollama.exe"
 
-def extract_single_json(text):
-    start = text.find("{")
-    if start == -1:
-        return None
+def extract_multiple_json(text):
+    """
+    Extract all JSON objects from a string sequentially.
+    Returns a list of Python dicts.
+    """
+    objs = []
+    i = 0
+    while i < len(text):
+        # Find the next opening brace
+        start = text.find("{", i)
+        if start == -1:
+            break
 
-    brace_count = 0
-    for i in range(start, len(text)):
-        if text[i] == '{':
-            brace_count += 1
-        elif text[i] == '}':
-            brace_count -= 1
-        
-        # When all braces are closed
-        if brace_count == 0:
-            json_str = text[start:i+1]
-            try:
-                return json.loads(json_str)
-            except json.JSONDecodeError:
-                return None
-    return None
+        brace_count = 0
+        for j in range(start, len(text)):
+            if text[j] == "{":
+                brace_count += 1
+            elif text[j] == "}":
+                brace_count -= 1
 
+            if brace_count == 0:
+                json_str = text[start:j+1]
+                try:
+                    obj = json.loads(json_str)
+                    objs.append(obj)
+                except json.JSONDecodeError:
+                    pass
+                i = j + 1
+                break
+        else:
+            break  # no matching closing brace found
+    return objs
+
+
+output_path = "iio_dataset.jsonl"
 
 with open(output_path, "w", encoding="utf-8") as outfile:
     for clause in clauses:
         raw_id = clause["clause_id"]
         clause_id = ''.join(filter(str.isdigit, raw_id))
-        print( f"Done for {clause_id}")
         
         prompt = prompt_template.format(
             clause_id=clause_id,
             text=clause["text"].strip()
         )
 
-        # Call Ollama using subprocess
         result = subprocess.run(
-            [ollama_path, "run", "deepseek-r1:1.5b"],
+            [ollama_path, "run", "granite3-moe:3b-instruct-q4_K_M"],
             input=prompt.encode("utf-8"),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -120,21 +163,15 @@ with open(output_path, "w", encoding="utf-8") as outfile:
         )
 
         output_text = result.stdout.decode("utf-8").strip()
-        error_text = result.stderr.decode("utf-8").strip()
-        
-        print(output_text)
 
-        # Try to extract the JSON from model response
-        try:
-            json_objects = extract_single_json(output_text)
-            print("Json Object from here:\n", json_objects)
-            if json_objects:
-                json.dump(json_objects, outfile, indent=2, ensure_ascii=False)
-                outfile.write(", \n")
-        except Exception as e:
-            print(f"Failed to parse output for {raw_id}")
-            print("Raw output:", output_text)
-            print("Error output:", error_text)
+        # Extract all JSON objects from the output
+        json_objects = extract_multiple_json(output_text)
+        print("JSON Objects from here:\n",json_objects,"\n")
+
+        for obj in json_objects:
+            # Write each JSON object on a separate line (JSONL format)
+            pretty = json.dumps(obj, indent=2, ensure_ascii=False)
+            outfile.write(pretty + "\n\n")
 
 
             
