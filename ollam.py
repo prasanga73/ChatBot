@@ -2,45 +2,54 @@ import json
 import subprocess
 import os
 import re
+import time
 # Use CUDA GPU backend
 env = os.environ.copy()
 # env["OLLAMA_ORCHESTRATOR"] = "cuda" 
-env["OLLAMA_NUM_GPU_LAYERS"] = "18"   # safe for 4GB
+env["OLLAMA_NUM_GPU_LAYERS"] = "2"   # safe for 4GB
 env["OLLAMA_CTX_SIZE"] = "1024"       # REQUIRED due to long prompt
 env["OLLAMA_GPU_OVERHEAD"] = "0"
 
 
 #Load clauses
-with open("clauses.json", "r", encoding="utf-8") as f:
+with open("CriminalClauses.json", "r", encoding="utf-8") as f:
     clauses = json.load(f)
 
 
 
 # Prompt template
-prompt_template = """You are a legal AI assistant helping to create a QLoRA fine-tuning dataset in Instruction-Input-Output (IIO) format based on civil law clauses from the Muluki Ain.
+prompt_template = """You are a legal AI assistant helping to create a QLoRA fine-tuning dataset in Instruction-Input-Output (IIO) format based on clauses from The National Penal (Code) Act, 2017 of Nepal.
 
-Below is a legal clause extracted from the Muluki Ain. Your task is to generate **exactly four independent, high-quality JSON samples**. Each sample must:
+Below is a legal clause, which may include multiple subsections labeled as (a), (b), (c), etc. Each subsection may further contain nested subsections (such as (i), (ii), (iii)) or additional hierarchical levels. Your task is to generate **high-quality JSON samples** as follows:
+1. **For a normal clause without subsections**:
+   - Generate **exactly four independent JSON entries**.
+2. **For a clause with subsections**:
+   - Detect each subsection automatically from the text.
+   - Generate **3 JSON entries per subsection**.
+   - Each JSON should reflect distinct reasoning or scenario for that subsection.
+
+Each JSON entry must:
 
 1. Have an **Instruction** that:
    - Is a general legal reasoning task (explain, interpret, apply, analyze).
    - Focuses on the *type of legal issue*, not memorizing the clause text.
-   - May mention the clause ID **but should not depend entirely on it**.
+   - May mention the clause ID and subsection label (e.g., (a), (b)), but reasoning should not depend solely on it.
 
 2. Have an **Input** that:
-   - Looks like a natural question or scenario a real user would ask.
+   - Looks like a natural question or scenario a real user might ask.
    - Does NOT summarize or rewrite the clause.
-   - Does NOT artificially mention the clause ID (unless realistic).
+   - Does NOT artificially force a clause ID or subsection mention unless realistic.
 
 3. Have an **Output** that:
-   - Is a plain-English legal explanation grounded in the clause's meaning.
-   - Mentions the clause ID **as a citation**, not the core logic.
-   - Encourages checking the Muluki Ain for authoritative interpretation.
-   - Avoids excessive copying or paraphrasing of the clause text.
+   - Provides a clear, plain-English legal explanation grounded in the clause's meaning.
+   - Mentions the clause ID and subsection label as a citation, not the core logic.
+   - Encourages checking The National Penal (Code) Act, 2017 for authoritative interpretation.
+   - Avoids copying or paraphrasing the clause text excessively.
 
-4. All four samples must:
-   - Cover different angles (examples, exceptions, obligations, rights, procedures).
-   - Avoid overly specific localization that would hurt generalization.
-   - Be legally consistent and precise.
+Across all samples:
+- Cover multiple angles (examples, exceptions, obligations, rights, procedures).
+- Ensure each subsection is reflected with distinct reasoning.
+- Maintain legal consistency and general applicability.
 
 ---
 
@@ -53,8 +62,6 @@ You may use these templates flexibly:
 - “Describe the rights and obligations established under Clause {clause_id}.”
 - “Provide a general legal explanation based on Clause {clause_id}.”
 
-You may also use **related but flexible instructions** (e.g., “Explain the legal rule about ___ as stated in the relevant clause”).
-
 ---
 
 ### Output Format
@@ -63,7 +70,7 @@ Use *exactly* the following JSON format for each entry:
 {{
   "instruction": "<general legal reasoning task>",
   "input": "<natural user scenario or question>",
-  "output": "<plain English, legally accurate explanation citing Clause {clause_id} and advising to consult the Muluki Ain>"
+  "output": "<plain English, legally accurate explanation citing Clause {clause_id} and relevant subsection in plain text, advising to consult The National Penal (Code) Act, 2017>"
 }}
 
 ---
@@ -74,8 +81,9 @@ Text: {text}
 
 ---
 
-Now generate **exactly four** IIO JSON entries that help the model learn generalizable legal reasoning rather than clause-specific memorization.
+Now generate the JSON entries according to the rules above, ensuring coverage for each subsection if present.
 """
+
 
 
 # prompt_template = """You are a legal AI assistant creating QLoRA fine-tuning data (Instruction-Input-Output) from the Muluki Ain.
@@ -142,10 +150,11 @@ def extract_multiple_json(text):
     return objs
 
 
-output_path = "iio_dataset.jsonl"
+output_path = "CriminalDataset.jsonl"
 
 with open(output_path, "w", encoding="utf-8") as outfile:
     for clause in clauses:
+        t1=time.time()
         raw_id = clause["clause_id"]
         clause_id = ''.join(filter(str.isdigit, raw_id))
         
@@ -167,13 +176,11 @@ with open(output_path, "w", encoding="utf-8") as outfile:
         # Extract all JSON objects from the output
         json_objects = extract_multiple_json(output_text)
         print("JSON Objects from here:\n",json_objects,"\n")
+        t2 = time.time()
+        print((t2-t1)/60," minutes taken")
+        print("")
 
         for obj in json_objects:
             # Write each JSON object on a separate line (JSONL format)
             pretty = json.dumps(obj, indent=2, ensure_ascii=False)
             outfile.write(pretty + "\n\n")
-
-
-            
-
-
